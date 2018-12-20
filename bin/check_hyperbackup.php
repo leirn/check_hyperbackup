@@ -129,14 +129,21 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 	
 	$status_n = 0; // Service OK
 	
+	$nagios_status = array (
+		0 => "OK",
+		1 => "WARNING",
+		2 => "CRITICAL",
+		3 => "UNKNOWN",
+		);
+	
 	foreach($obj->data->task_list as $task) {
     	if($debug) print_r(task);	
 		$obj = syno_request($server.'/webapi/'.$path.'?api='.$api.'&version=1&method=status&blOnline=false&additional=%5B%22last_bkp_time%22%2C%22next_bkp_time%22%2C%22last_bkp_result%22%2C%22is_modified%22%2C%22last_bkp_progress%22%5D&task_id='.$task->task_id.'&_sid='.$sid);
 		if($debug) print_r($obj);
 		$last_bkp_status = $obj->data->last_bkp_result;
 		$task_status = $obj->data->status;
-		echo "Backup ".$task->name." status is $task_status. Last backup result: $last_bkp_status\n";
 		
+		$s = 0;
 		if($last_bkp_status === "done" && $task_status === "none") { // Normal situation : no end going backup and last backup was success
 			$status_n = max(0, $status_n);
 		}
@@ -145,17 +152,12 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 		}
 		else { // Default value for unknow situation
 			$status_n = max(2, $status_n);
+			$s = 2;
 		}
+		echo "Backup ".$task->name." status is $task_status. Last backup result: $last_bkp_status. Status is ".$nagios_status[$s]."\n";
 	}
 	
-	$nagios_status = array (
-		0 => "OK",
-		1 => "WARNING",
-		2 => "CRITICAL",
-		3 => "UNKNOWN",
-		);
-	
-	echo "\nBackup ".$nagios_status[$status_n]."\n";
+	echo "\nOverall backup status is ".$nagios_status[$status_n]."\n";
 	
 
 	//Get SYNO.API.Auth Path (recommended by Synology for further update)
