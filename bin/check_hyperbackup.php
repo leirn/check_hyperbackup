@@ -7,12 +7,13 @@
  * Script to check the status of backups on Synology NAS
  * 
  * Existing statuses for status :
- * - none
- * - backup
+ * - none			-> OK
+ * - backup			-> OK
+ * - detect			-> OK
  * 
  * Existing statuses for last_bkp_result :
- * - done
- * - backupingup
+ * - done			-> OK
+ * - backupingup	-> OK
  * 
  ************************/
 $debug = false;
@@ -145,6 +146,9 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 		
 		$s = 0;
 		if($last_bkp_status === "done" && $task_status === "none") { // Normal situation : no end going backup and last backup was success
+			$status_n = max(0, $status_n);
+		}
+		elseif($last_bkp_status === "done" && $task_status === "detect") { // Ongoing backup
 			$status_n = max(0, $status_n);
 		}
 		elseif($last_bkp_status === "backingup" && $task_status === "backup") { // Ongoing backup
