@@ -10,6 +10,7 @@
  * - none			-> OK
  * - backup			-> OK
  * - detect			-> OK
+ * - waiting		-> OK
  * 
  * Existing statuses for last_bkp_result :
  * - done			-> OK
@@ -151,6 +152,9 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 		elseif($last_bkp_status === "done" && $task_status === "detect") { // Ongoing backup
 			$status_n = max(0, $status_n);
 		}
+		elseif($last_bkp_status === "done" && $task_status === "waiting") { // Waiting for backup
+			$status_n = max(0, $status_n);
+		}
 		elseif($last_bkp_status === "backingup" && $task_status === "backup") { // Ongoing backup
 			$status_n = max(0, $status_n);
 		}
@@ -182,4 +186,3 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
     exit ($status_n);
     
 ?>
-  
