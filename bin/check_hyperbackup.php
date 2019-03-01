@@ -158,6 +158,12 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 		elseif($last_bkp_status === "backingup" && $task_status === "backup") { // Ongoing backup
 			$status_n = max(0, $status_n);
 		}
+		elseif($last_bkp_status === "resuming" && $task_status === "backup") { // Resuming backup
+			$status_n = max(0, $status_n);
+		}
+		elseif($last_bkp_status === "suspended") { // Backup suspended
+			$status_n = max(1, $status_n);
+		}
 		else { // Default value for unknow situation
 			$status_n = max(2, $status_n);
 			$s = 2;
