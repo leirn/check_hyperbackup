@@ -1,3 +1,4 @@
+
 #!/usr/bin/php
 <?php
 /************************
@@ -146,16 +147,27 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 		$task_status = $obj->data->status;
 		
 		$s = 0;
-		if($last_bkp_status === "done" && $task_status === "none") { // Normal situation : no end going backup and last backup was success
+		// check last_bkp_result
+		if($last_bkp_status === "done" )
+			$status_n = max(0, $status_n);
+		elseif($last_bkp_status === "none" )
+			$status_n = max(1, $status_n);
+		elseif($last_bkp_status === "backingup") 
+			$status_n = max(0, $status_n);
+		else
+			$status_n = max(2, $status_n);
+			
+		// Check task_status
+		if($task_status === "none") { // Normal situation : no end going backup and last backup was success
 			$status_n = max(0, $status_n);
 		}
-		elseif($last_bkp_status === "done" && $task_status === "detect") { // Ongoing backup
+		elseif($task_status === "detect") { // Ongoing backup
 			$status_n = max(0, $status_n);
 		}
-		elseif($last_bkp_status === "done" && $task_status === "waiting") { // Waiting for backup
+		elseif($task_status === "waiting") { // Waiting for backup
 			$status_n = max(0, $status_n);
 		}
-		elseif($last_bkp_status === "backingup" && $task_status === "backup") { // Ongoing backup
+		elseif($task_status === "backup") { // Ongoing backup
 			$status_n = max(0, $status_n);
 		}
 		else { // Default value for unknow situation
