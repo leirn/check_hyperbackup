@@ -101,7 +101,7 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 
     /* API VERSIONS */
     //SYNO.API.Auth
-    $vAuth = 2;
+    $vAuth = 6;
     
 	$api = "SYNO.Backup.Task";
     //$api = "SYNO.DownloadStation.Task";
