@@ -12,11 +12,13 @@
  * - detect			-> OK
  * - waiting			-> OK
  * - version_deleting		-> WARNING
+ * - preparing_version_deleting	-> WARNING
  * 
  * Existing statuses for last_bkp_result :
  * - done			-> OK
  * - backingup			-> OK
  * - version_deleting		-> OK
+ * - preparing_version_deleting	-> WARNING
  * 
  ************************/
 $debug = false;
@@ -157,6 +159,8 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 			$status_n = max(0, $status_n);
                 elseif($last_bkp_status === "version_deleting")
                         $status_n = max(0, $status_n);
+                elseif($last_bkp_status === "preparing_version_deleting")
+                        $status_n = max(0, $status_n);
 		else
 			$status_n = max(2, $status_n);
 			
@@ -173,7 +177,7 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 		elseif($task_status === "backup") { // Ongoing backup
 			$status_n = max(0, $status_n);
 		}
-		elseif($task_status === "version_deleting") { //Ongoing deletion of old version
+		elseif($task_status === "version_deleting" || $task_status === "preparing_version_deleting") { //Ongoing/praparation of deletion of old version
                         $status_n = max(1, $status_n);
 			$s = 1;
                 }
