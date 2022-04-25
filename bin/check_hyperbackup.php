@@ -17,6 +17,7 @@
  * Existing statuses for last_bkp_result :
  * - done			-> OK
  * - backingup			-> OK
+ * - resuming			-> OK
  * - version_deleting		-> OK
  * - preparing_version_delete	-> OK
  * 
@@ -156,6 +157,8 @@ if(!isset($options['p'])) {echo "Password not defined.\n";print_help();exit;} el
 		elseif($last_bkp_status === "none" )
 			$status_n = max(1, $status_n);
 		elseif($last_bkp_status === "backingup") 
+			$status_n = max(0, $status_n);
+		elseif($last_bkp_status === "resuming") 
 			$status_n = max(0, $status_n);
                 elseif($last_bkp_status === "version_deleting")
                         $status_n = max(0, $status_n);
